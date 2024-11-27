@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: posts-depl
+spec:
+  replicas: 1
+  #selector is to find the pods with the label post which this deployment should charge of
+  selector:
+    matchLabels:
+      app: posts
+  #template is where we spcify exact configuration of the pods we want this deployment to create
+  template:
+    metadata:
+      labels:
+        app: posts
+    spec:
+      containers:
+        - name: posts
+          image: sgidd/posts
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: posts-clusterip-srv
+spec:
+  selector:
+    name: posts
+  type: ClusterIP
+  ports:
+    - name: posts
+      port: 4000
+      targetPort: 4000
